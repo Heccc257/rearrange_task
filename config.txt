@@ -1,0 +1,4 @@
+maxThreads = 20
+raw_data_dir = ../raw_data
+hash_result_dir = ../hash_result/128bits
+musk_result_dir = ../musk_result/128bits
