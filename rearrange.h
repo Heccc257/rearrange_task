@@ -12,7 +12,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     ifstream raw_data(raw_data_path, std::ios::binary);
     int raw_data_fd = open(raw_data_path.c_str(), O_RDONLY);
     if (!raw_data.is_open()) {
-        std::cerr << "无法打开文件" << std::endl;
+        std::cerr << "无法打开文件 " << raw_data_path << std::endl;
         return ;
     }
     raw_data.seekg(0, std::ios::end);
@@ -21,7 +21,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     size_t Chunk_nums = (raw_data_size + CHUNKSIZE - 1) / CHUNKSIZE;
     ifstream musk_data(musk_result_path, std::ios::in);
     if (!musk_data.is_open()) {
-        std::cerr << "无法打开文件" << std::endl;
+        std::cerr << "无法打开文件 " << musk_result_path << std::endl;
         return ;
     }
     
@@ -57,6 +57,8 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     }
     for (auto id: lstGroup)
         orders[id] = tot++;
+    for (auto r: orders)
+        std::cerr << r << '\n';
     const size_t batch_size = 20000;
     const size_t MAXMMAPSIZE = batch_size * CHUNKSIZE;
     size_t rawDataOff = 0;
@@ -72,6 +74,13 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
             // rearg_file.write(data + s, min(CHUNKSIZE, mmap_size - s));
             lseek(rearg_fd, pos, SEEK_SET);
             write(rearg_fd, data + s, min(CHUNKSIZE, mmap_size - s));
+            uint64_t *array = reinterpret_cast<uint64_t*>(data+s);
+            int one_pos = 0;
+            for (int k = 0; k < 1024; k ++)
+                if (*(array+k) == 1)
+                    one_pos = k;
+            std::cerr << "idx = " << idx << " pos = " << pos / CHUNKSIZE << '\n';
+            std::cerr << "one pos = " << one_pos << '\n';
             idx ++ ;
         }
         fdatasync(rearg_fd);

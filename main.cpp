@@ -55,6 +55,8 @@ int main(int argc, char* argv[]) {
     string rearg_result_path = config["musk_result_dir"] + "/" + data_name +  ".rearg";
     ifstream inputFile(hash_data_path, std::ios::binary);
 
+    cout << "musk result path: " << musk_result_path << '\n';
+    cout << "rearg path: " << rearg_result_path << '\n';
     cout << "data name: " << data_name << '\n';
 
     int M;
