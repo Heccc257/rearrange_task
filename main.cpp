@@ -50,20 +50,14 @@ int main(int argc, char* argv[]) {
     ReadConfig(configFilePath, config);
 
     string raw_data_path = config["raw_data_dir"] + "/" + data_name;
-    string hash_data_path = config["hash_result_dir"] + "/" + data_name +  ".hash";
-    string musk_result_path = config["musk_result_dir"] + "/" + data_name +  ".musk";
-    string rearg_result_path = config["musk_result_dir"] + "/" + data_name +  ".rearg";
-    ifstream inputFile(hash_data_path, std::ios::binary);
+    string cluster_result_path = config["cluster_result_dir"] + "/" + data_name +  ".cluster";
+    string rearg_result_path = config["cluster_result_dir"] + "/" + data_name +  ".rearg";
 
-    cout << "musk result path: " << musk_result_path << '\n';
-    cout << "rearg path: " << rearg_result_path << '\n';
+    cout << "cluster result path: " << cluster_result_path << '\n';
+    cout << "rearg result path: " << rearg_result_path << '\n';
     cout << "data name: " << data_name << '\n';
 
-    int M;
-    inputFile.read(reinterpret_cast<char*>(&M), sizeof(int));
-    cout << "length: " << M << '\n';
-
-    Rearrange(raw_data_path, musk_result_path, rearg_result_path);
+    Rearrange(raw_data_path, cluster_result_path, rearg_result_path);
 
     return 0;
 }

@@ -45,20 +45,23 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
         int number;
         stringstream numbers(line);
         ids.clear();
-        while (numbers >> number) ids.push_back(number);
-        sort(ids.begin(), ids.end());
-        if (ids.back() == Chunk_nums - 1) {
-            lstGroup = ids;
-        } else {
-            for (auto id: ids) {
-                orders[id] = tot++;
-            }
-        }
+        while (numbers >> number)
+            orders[number] = tot++;
+        // while (numbers >> number) ids.push_back(number);
+        // sort(ids.begin(), ids.end());
+        // if (ids.back() == Chunk_nums - 1) {
+        //     lstGroup = ids;
+        // } else {
+        //     for (auto id: ids) {
+        //         orders[id] = tot++;
+        //     }
+        // }
     }
     for (auto id: lstGroup)
         orders[id] = tot++;
-    for (auto r: orders)
-        std::cerr << r << '\n';
+    // for (auto r: orders)
+    //     std::cerr << r << '\n';
+    // return ;
     const size_t batch_size = 20000;
     const size_t MAXMMAPSIZE = batch_size * CHUNKSIZE;
     size_t rawDataOff = 0;
@@ -75,12 +78,9 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
             lseek(rearg_fd, pos, SEEK_SET);
             write(rearg_fd, data + s, min(CHUNKSIZE, mmap_size - s));
             uint64_t *array = reinterpret_cast<uint64_t*>(data+s);
-            int one_pos = 0;
-            for (int k = 0; k < 1024; k ++)
-                if (*(array+k) == 1)
-                    one_pos = k;
-            std::cerr << "idx = " << idx << " pos = " << pos / CHUNKSIZE << '\n';
-            std::cerr << "one pos = " << one_pos << '\n';
+
+            // std::cerr << "idx = " << idx << " pos = " << pos / CHUNKSIZE << '\n';
+            // std::cerr << "one pos = " << one_pos << '\n';
             idx ++ ;
         }
         fdatasync(rearg_fd);
