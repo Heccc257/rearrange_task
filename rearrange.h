@@ -67,7 +67,8 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     size_t rawDataOff = 0;
     int idx = 0;
     for (int i = 0; i < Chunk_nums; i += batch_size) {
-        std::cerr << "i = " << i << '\n';
+        if (i % 200000 == 0)
+            std::cerr << "i = " << i << '\n';
         size_t mmap_size = min(MAXMMAPSIZE, raw_data_size - rawDataOff);
         void* file_memory = mmap(0, mmap_size, PROT_READ, MAP_SHARED, raw_data_fd, rawDataOff);
         char *data = reinterpret_cast<char*>(file_memory);
