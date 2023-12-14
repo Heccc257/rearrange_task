@@ -25,7 +25,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
         return ;
     }
     
-    // fstream rearg_file(rearg_result_path, std::ios::binary | std::ios::out);
+    fstream rearg_file(rearg_result_path, std::ios::binary | std::ios::out);
     int rearg_fd = open(rearg_result_path.c_str(), O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     std::cerr << "rearg file: " << rearg_result_path << '\n';
     ftruncate(rearg_fd, raw_data_size);
@@ -34,58 +34,61 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
         return ;
     }
     size_t ChunkID;
-    char buffer[CHUNKSIZE];
 
     string line;
     vector<size_t> ids;
     vector<size_t> lstGroup;
     vector<size_t> orders(Chunk_nums);
+    vector<size_t> reverse_orders(Chunk_nums);
     size_t tot = 0;
     while (getline(musk_data, line)) {
         int number;
         stringstream numbers(line);
         ids.clear();
-        while (numbers >> number)
+        while (numbers >> number) {
+            reverse_orders[tot] = number;
             orders[number] = tot++;
-        // while (numbers >> number) ids.push_back(number);
-        // sort(ids.begin(), ids.end());
-        // if (ids.back() == Chunk_nums - 1) {
-        //     lstGroup = ids;
-        // } else {
-        //     for (auto id: ids) {
-        //         orders[id] = tot++;
-        //     }
-        // }
+        }
     }
     for (auto id: lstGroup)
         orders[id] = tot++;
     // for (auto r: orders)
     //     std::cerr << r << '\n';
     // return ;
-    const size_t batch_size = 20000;
+    const size_t batch_size = 100000;
     const size_t MAXMMAPSIZE = batch_size * CHUNKSIZE;
+    char *buffer = new char[MAXMMAPSIZE];
+
     size_t rawDataOff = 0;
     int idx = 0;
     for (int i = 0; i < Chunk_nums; i += batch_size) {
-        if (i % 200000 == 0)
-            std::cerr << "i = " << i << '\n';
+        std::cerr << "i = " << i << '\n';
+        vector<int> pos;
+        
         size_t mmap_size = min(MAXMMAPSIZE, raw_data_size - rawDataOff);
         void* file_memory = mmap(0, mmap_size, PROT_READ, MAP_SHARED, raw_data_fd, rawDataOff);
         char *data = reinterpret_cast<char*>(file_memory);
-        for (size_t s = 0; s < mmap_size; s += CHUNKSIZE) {
-            size_t pos = orders[idx] * CHUNKSIZE;
-            // rearg_file.seekp(pos, std::ios::beg);
-            // rearg_file.write(data + s, min(CHUNKSIZE, mmap_size - s));
-            lseek(rearg_fd, pos, SEEK_SET);
-            write(rearg_fd, data + s, min(CHUNKSIZE, mmap_size - s));
-            uint64_t *array = reinterpret_cast<uint64_t*>(data+s);
 
-            // std::cerr << "idx = " << idx << " pos = " << pos / CHUNKSIZE << '\n';
-            // std::cerr << "one pos = " << one_pos << '\n';
+        for (size_t s = 0; s < mmap_size; s += CHUNKSIZE) {
+            pos.push_back(orders[idx]);
             idx ++ ;
         }
-        fdatasync(rearg_fd);
-        // rearg_file.flush();
+        sort(pos.begin(), pos.end());
+
+        // 不能初始化为0
+        size_t lstOutOff = 1;
+
+        for (auto p: pos) {
+            size_t outputOff = p * CHUNKSIZE;
+            size_t inputOff = CHUNKSIZE * (reverse_orders[p] - i);
+            if (rearg_file.tellp() + CHUNKSIZE != outputOff) {
+                rearg_file.seekp(outputOff);
+            }
+            lstOutOff = outputOff;
+            rearg_file.write(data + inputOff, min(CHUNKSIZE, mmap_size - inputOff));
+        }
+        rearg_file.flush();
+        
         munmap(file_memory, mmap_size);
         rawDataOff += mmap_size;
     }
@@ -95,6 +98,10 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     close(rearg_fd);
     raw_data.close();
     musk_data.close();
-    // rearg_file.close();
+    rearg_file.close();
+
+    //
+    delete []buffer;
+
     return ;
 }
