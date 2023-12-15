@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
     Rearrange(raw_data_path, cluster_result_path, rearg_result_path);
     string hash_rearg = hash_file(rearg_result_path);
     cout << "rearg file hash: " << hash_rearg << '\n';
+    cout << "\n";
     if (hash_raw != hash_rearg) {
         cerr << "not match\n";
         system("pause");
