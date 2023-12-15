@@ -1,6 +1,6 @@
 maxThreads = 20
-raw_data_dir = /root/huawei-project/raw_data
-cluster_result_dir = /root/huawei-project/cluster_result
-0 = ../raw_data
-1 = ../hash_result/128bits
-2 = ../musk_result/128bits
+1raw_data_dir = /root/huawei-project/raw_data
+1cluster_result_dir = /root/huawei-project/cluster_result
+
+raw_data_dir = /root/huawei-project/myHZBC/test
+cluster_result_dir = /root/huawei-project/myHZBC/test
