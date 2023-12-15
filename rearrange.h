@@ -81,9 +81,9 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
         for (auto p: pos) {
             size_t outputOff = p * CHUNKSIZE;
             size_t inputOff = CHUNKSIZE * (reverse_orders[p] - i);
-            if ((size_t)rearg_file.tellp() + CHUNKSIZE != outputOff) {
-                rearg_file.seekp(outputOff);
-            }
+            // if ((size_t)rearg_file.tellp() + CHUNKSIZE != outputOff || 1) {
+            rearg_file.seekp(outputOff);
+            // }
             lstOutOff = outputOff;
             rearg_file.write(data + inputOff, min(CHUNKSIZE, mmap_size - inputOff));
         }
