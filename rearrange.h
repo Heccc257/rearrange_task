@@ -59,6 +59,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     const size_t MAXMMAPSIZE = batch_size * CHUNKSIZE;
     char *buffer = new char[MAXMMAPSIZE];
 
+    cout << "Chunk nums = " << Chunk_nums << '\n';
     size_t rawDataOff = 0;
     int idx = 0;
     for (int i = 0; i < Chunk_nums; i += batch_size) {
