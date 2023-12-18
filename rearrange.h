@@ -45,6 +45,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     while (getline(musk_data, line)) {
         int number;
         stringstream numbers(line);
+        cout << "line: " << line << '\n';
         ids.clear();
         while (numbers >> number) {
             reverse_orders[tot] = number;
