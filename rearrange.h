@@ -42,6 +42,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     vector<size_t> orders(Chunk_nums);
     vector<size_t> reverse_orders(Chunk_nums);
     size_t tot = 0;
+    cout << "Chunk nums: " << Chunk_nums << '\n';
     while (getline(musk_data, line)) {
         int number;
         stringstream numbers(line);
