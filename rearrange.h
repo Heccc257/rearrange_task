@@ -47,6 +47,9 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
         stringstream numbers(line);
         cout << "line: " << line << '\n';
         ids.clear();
+        if (tot >= Chunk_nums) {
+            std::cerr << "error  " << Chunk_nums << " tot = " << tot << '\n';
+        }
         while (numbers >> number) {
             reverse_orders[tot] = number;
             orders[number] = tot++;
