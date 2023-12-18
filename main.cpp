@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
     cout << "cluster result path: " << cluster_result_path << '\n';
     cout << "rearg result path: " << rearg_result_path << '\n';
-    cout << "data name: " << data_name << '\n';
+    cout << "raw data name: " << raw_data_path << '\n';
 
     Rearrange(raw_data_path, cluster_result_path, rearg_result_path);
     string hash_raw = hash_file(raw_data_path);
