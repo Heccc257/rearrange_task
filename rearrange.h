@@ -35,6 +35,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     }
     size_t ChunkID;
 
+    std::cerr << "here1\n";
     string line;
     vector<size_t> ids;
     vector<size_t> lstGroup;
@@ -50,8 +51,10 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
             orders[number] = tot++;
         }
     }
+    std::cerr << "here2\n";
     for (auto id: lstGroup)
         orders[id] = tot++;
+    
     // for (auto r: orders)
     //     std::cerr << r << '\n';
     // return ;
