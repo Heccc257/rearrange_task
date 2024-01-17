@@ -35,7 +35,7 @@ void ReadConfig(const string& configFilePath, map<string, string>& config) {
 
 vector<vector<int> > clusters;
 int main(int argc, char* argv[]) {
-
+    auto globalBeginStart = chrono::system_clock::now();
     map<string, string> config;
     string configFilePath = "config.txt"; // Default config file path
     string data_name;
@@ -68,5 +68,10 @@ int main(int argc, char* argv[]) {
         cerr << "not match\n";
         system("pause");
     }
+    auto globalBeginEnd = chrono::system_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(globalBeginEnd - globalBeginStart);
+    cout << "tot rearrange time use: " << double(duration.count()) * chrono::microseconds::period::num / chrono::microseconds::period::den << '\n';
+    cout << "\n";
+
     return 0;
 }
