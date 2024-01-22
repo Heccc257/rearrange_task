@@ -68,7 +68,7 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
         }
 
     }
-    std::cerr << "here2\n";
+    std::cerr << "check cluster OK\n";
     for (auto id: lstGroup)
         orders[id] = tot++;
     
