@@ -62,15 +62,15 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
             exist.insert(number);
             orders[number] = tot++;
         }
-        if (tot != Chunk_nums) {
-            std::cerr << "tot not match " << tot << ' ' << Chunk_nums << "\n";
-            exit(1);
-        }
         if (num_one_cluster > 10) {
             std::cerr << "cluster too big\n";
             exit(1);
         }
 
+    }
+    if (tot != Chunk_nums) {
+        std::cerr << "tot not match " << tot << ' ' << Chunk_nums << "\n";
+        exit(1);
     }
     std::cerr << "check cluster OK\n";
     for (auto id: lstGroup)
