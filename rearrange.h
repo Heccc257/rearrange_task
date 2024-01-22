@@ -42,18 +42,31 @@ void Rearrange(string raw_data_path, string musk_result_path, string rearg_resul
     vector<size_t> orders(Chunk_nums);
     vector<size_t> reverse_orders(Chunk_nums);
     size_t tot = 0;
+    unordered_set<size_t> exist;
     cout << "Chunk nums: " << Chunk_nums << '\n';
     while (getline(musk_data, line)) {
         int number;
         stringstream numbers(line);
         ids.clear();
+        int num_one_cluster = 0;
         while (numbers >> number) {
+            num_one_cluster ++ ;
             reverse_orders[tot] = number;
             if (tot >= Chunk_nums || number >= Chunk_nums) {
                 std::cerr << "error  " << Chunk_nums << " tot = " << tot << '\n';
             }
+            if (exist.find(number) != exist.end()) {
+                std::cerr << "repulica number " << number << '\n';
+                exit(1);
+            }
+            exist.insert(number);
             orders[number] = tot++;
         }
+        if (num_one_cluster > 10) {
+            std::cerr << "cluster too big\n";
+            exit(1);
+        }
+
     }
     std::cerr << "here2\n";
     for (auto id: lstGroup)
